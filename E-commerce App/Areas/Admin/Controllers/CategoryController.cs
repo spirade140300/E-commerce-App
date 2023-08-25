@@ -1,20 +1,22 @@
 ﻿using ECommerceApp.DataAccess;
+using ECommerceApp.DataAccess.Repository.IRepository;
 using ECommerceApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerceApp.Controllers
+namespace E_commerce_App.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            List<Category> objectCategoryList = _db.Categories.ToList();
+            List<Category> objectCategoryList = _unitOfWork.Category.GetAll(includeProperties: "").ToList();
             return View(objectCategoryList);
         }
 
@@ -25,11 +27,12 @@ namespace ECommerceApp.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0) {
+            if (id == null || id == 0)
+            {
                 return NotFound();
             }
-            Category? categoryFromDB = _db.Categories.Find(id);
-            if(categoryFromDB == null)
+            Category? categoryFromDB = _unitOfWork.Category.Get(cate => cate.Id == id, includeProperties: "");
+            if (categoryFromDB == null)
             {
                 return NotFound();
             }
@@ -42,7 +45,7 @@ namespace ECommerceApp.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDB = _db.Categories.Find(id);
+            Category? categoryFromDB = _unitOfWork.Category.Get(cate => cate.Id == id, includeProperties: "");
             if (categoryFromDB == null)
             {
                 return NotFound();
@@ -53,14 +56,10 @@ namespace ECommerceApp.Controllers
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-            //if(obj.Name == obj.DisplayOrder.ToString())
-            //{
-            //    ModelState.AddModelError("Name", "The Display Order cannot exactly match the Name.");
-            //}
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -72,8 +71,8 @@ namespace ECommerceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
@@ -83,13 +82,13 @@ namespace ECommerceApp.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category obj = _db.Categories.Find(id);
-            if(obj == null)
+            Category obj = _unitOfWork.Category.Get(cate => cate.Id == id, includeProperties: "");
+            if (obj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
