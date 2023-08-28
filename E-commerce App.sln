@@ -5,11 +5,11 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp", "E-commerce App\ECommerceApp.csproj", "{B75C93D6-8355-4555-BF98-8BC5D5AE70BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApp.DataAccess", "DataAccess\ECommerceApp.DataAccess.csproj", "{F1BEE484-3237-475A-9251-2E051B06EBA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp.DataAccess", "DataAccess\ECommerceApp.DataAccess.csproj", "{F1BEE484-3237-475A-9251-2E051B06EBA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApp.Models", "Models\ECommerceApp.Models.csproj", "{88272DD3-65CC-4E8A-9EA0-E6445687EE5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp.Models", "Models\ECommerceApp.Models.csproj", "{88272DD3-65CC-4E8A-9EA0-E6445687EE5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApp.Utility", "Utility\ECommerceApp.Utility.csproj", "{C40C9286-9B81-4EA5-8467-DC8FD0886359}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp.Utility", "Utility\ECommerceApp.Utility.csproj", "{C40C9286-9B81-4EA5-8467-DC8FD0886359}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
