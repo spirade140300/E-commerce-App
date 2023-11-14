@@ -29,21 +29,6 @@ namespace E_commerce_App.Areas.Admin.Controllers
             return View(objectProductList);
         }
 
-        public IActionResult Create()
-        {
-            ProductVM productVM = new ProductVM()
-            {
-                CategoryList = _unitOfWork.Category
-                .GetAll(includeProperties: "").Select(u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString()
-                }),
-                Product = new Product()
-            };
-            return View(productVM);
-        }
-
         public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new ProductVM()
@@ -113,8 +98,8 @@ namespace E_commerce_App.Areas.Admin.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
+                return View(productVM);
             }
-            return View(productVM);
         }
 
         [HttpGet]

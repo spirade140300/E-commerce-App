@@ -4,6 +4,7 @@ using ECommerceApp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce_App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230914095615_UpdateNameToBeStringApplicationUser")]
+    partial class UpdateNameToBeStringApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,90 +63,6 @@ namespace E_commerce_App.Migrations
                             Id = 3,
                             DisplayOrder = 3,
                             Name = "History"
-                        });
-                });
-
-            modelBuilder.Entity("ECommerceApp.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StreetAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "City 1",
-                            Name = "Company 1",
-                            PhoneNumber = "1111111111",
-                            PostalCode = "111111",
-                            State = "11",
-                            StreetAddress = "address 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "City 2",
-                            Name = "Company 2",
-                            PhoneNumber = "1111111111",
-                            PostalCode = "222222",
-                            State = "22",
-                            StreetAddress = "address 2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "City 3",
-                            Name = "Company 3",
-                            PhoneNumber = "1111111111",
-                            PostalCode = "333333",
-                            State = "33",
-                            StreetAddress = "address 3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "City 4",
-                            Name = "Company 4",
-                            PhoneNumber = "1111111111",
-                            PostalCode = "444444",
-                            State = "44",
-                            StreetAddress = "address 4"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "City 5",
-                            Name = "Company 5",
-                            PhoneNumber = "1111111111",
-                            PostalCode = "555555",
-                            State = "55",
-                            StreetAddress = "address 5"
                         });
                 });
 
@@ -409,9 +328,6 @@ namespace E_commerce_App.Migrations
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CompanyID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
