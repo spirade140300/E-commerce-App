@@ -168,6 +168,12 @@ namespace E_commerce_App.Areas.Identity.Pages.Account
                 user.City = Input.City;
                 user.PostalCode = Input.PostalCode;
                 user.State = Input.State;
+
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyID = Input.CompanyId;
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
