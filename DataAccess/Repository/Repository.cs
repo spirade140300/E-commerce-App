@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ECommerceApp.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.DataAccess.Repository
@@ -25,9 +26,18 @@ namespace ECommerceApp.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+                
+            }
             query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -40,7 +50,7 @@ namespace ECommerceApp.DataAccess.Repository
         }
 
         public IEnumerable<T> GetAll(string? includeProperties = null)
-        {
+        { 
             IQueryable<T> query = dbSet;
             if(!string.IsNullOrEmpty(includeProperties))
             {
