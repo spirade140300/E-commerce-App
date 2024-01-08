@@ -12,5 +12,14 @@ namespace EcommerceApp.Utility
         public const string Role_Company = "Company";
         public const string Role_Admin = "Admin";
         public const string Role_Employee = "Employee";
+
+        public const string StatusPending = "StatusPending";
+        public const string StatusApproved = "StatusApproved";
+        public const string StatusProcessing = "StatusProcessing";
+        public const string StatusShipped = "StatusShipped";
+
+        public const string StatusPaymentPending = "StatusPaymentPending";
+        public const string StatusPaymentApproved = "StatusPaymentApproved";
+        public const string StatusPaymentApprovedForDelayedPayment = "StatusPaymentApprovedForDelayedPayment";
     }
 }
