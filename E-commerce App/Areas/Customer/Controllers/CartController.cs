@@ -119,19 +119,19 @@ namespace E_commerce_App.Areas.Customer.Controllers
 			foreach (var cart in shoppingCartVM.ShoppingCartList)
 			{
 				cart.Price = GetPriceBasedOnQuantity(cart);
-				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+				shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
 			}
 
             if(applicationUser.CompanyID.GetValueOrDefault() == 0)
             {
                 // regular account
-                shoppingCartVM.OrderHeader.PaymentStatus = SD.StatusPaymentPending;
+                shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
                 shoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
             }
             else
             {
                 // company account
-                shoppingCartVM.OrderHeader.PaymentStatus = SD.StatusPaymentApprovedForDelayedPayment;
+                shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 shoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
             }
 			_unitOfWork.OrderHeader.Add(shoppingCartVM.OrderHeader);
@@ -190,7 +190,7 @@ namespace E_commerce_App.Areas.Customer.Controllers
             else
             {
                 // for company
-                shoppingCartVM.OrderHeader.PaymentStatus = SD.StatusPaymentApprovedForDelayedPayment;
+                shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 shoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
             }
 
@@ -200,14 +200,14 @@ namespace E_commerce_App.Areas.Customer.Controllers
         public IActionResult OrderConfirmation(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
-            if(orderHeader.PaymentStatus != SD.StatusPaymentApprovedForDelayedPayment)
+            if(orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
             {
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.SessionId);
                 if(session.PaymentStatus.ToLower() == "paid")
                 {
                     _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
-                    _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.StatusPaymentApproved);
+                    _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.Save();
                 }
             }

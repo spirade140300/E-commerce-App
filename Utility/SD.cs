@@ -13,13 +13,16 @@ namespace EcommerceApp.Utility
         public const string Role_Admin = "Admin";
         public const string Role_Employee = "Employee";
 
-        public const string StatusPending = "StatusPending";
-        public const string StatusApproved = "StatusApproved";
-        public const string StatusProcessing = "StatusProcessing";
-        public const string StatusShipped = "StatusShipped";
+        public const string StatusPending = "Pending";
+        public const string StatusApproved = "Approved";
+        public const string StatusInProcess = "Processing";
+        public const string StatusShipped = "Shipped";
+        public const string StatusCancelled = "Cancelled";
+        public const string StatusRefunded = "Refunded";
 
-        public const string StatusPaymentPending = "StatusPaymentPending";
-        public const string StatusPaymentApproved = "StatusPaymentApproved";
-        public const string StatusPaymentApprovedForDelayedPayment = "StatusPaymentApprovedForDelayedPayment";
+        public const string PaymentStatusPending = "Pending";
+        public const string PaymentStatusApproved = "Approved";
+        public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
+        public const string PaymentStatusRejected = "Rejected";
     }
 }
