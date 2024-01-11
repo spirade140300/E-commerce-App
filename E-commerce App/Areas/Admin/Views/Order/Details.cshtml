@@ -248,13 +248,13 @@
                                 }
                                 @if (Model.OrderHeader.OrderStatus == EcommerceApp.Utility.SD.StatusInProcess)
                                 {
-                                    <button type="submit" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
+                                    <button type="submit" asp-action="ShipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
                                 }
                                 @if (Model.OrderHeader.OrderStatus != EcommerceApp.Utility.SD.StatusRefunded &&
                                     Model.OrderHeader.OrderStatus != EcommerceApp.Utility.SD.StatusCancelled &&
                                     Model.OrderHeader.OrderStatus != EcommerceApp.Utility.SD.StatusShipped)
                                 {
-                                    <button type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+                                    <button type="submit" asp-action="CancelOrder" class="btn btn-danger form-control my-1">Cancel Order</button>
                                 }
                             }
                         </div>

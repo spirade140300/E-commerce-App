@@ -1,6 +1,8 @@
-﻿using ECommerceApp.DataAccess.Repository.IRepository;
+﻿using EcommerceApp.Utility;
+using ECommerceApp.DataAccess.Repository.IRepository;
 using ECommerceApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -21,6 +23,16 @@ namespace E_commerce_App.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            var claimIndentity = (ClaimsIdentity)User.Identity;
+            var claim = claimIndentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if(claim == null)
+            {
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == claim.Value).Count());
+            }
+
+
             IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category");
             return View(products);
         }
@@ -51,16 +63,18 @@ namespace E_commerce_App.Areas.Customer.Controllers
                 //shopping cart exist
                 cartFromDb.Count += shoppingCart.Count;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
             }
             else
             {
                 // add new cart record
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == userId).Count());
                 
             }
             TempData["success"] = "Cart updated successfully";
-
-            _unitOfWork.Save();
             return RedirectToAction(nameof(Index)); 
         }
 
