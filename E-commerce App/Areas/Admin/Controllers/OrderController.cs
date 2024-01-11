@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace E_commerce_App.Areas.Admin.Controllers
 {
@@ -14,6 +15,8 @@ namespace E_commerce_App.Areas.Admin.Controllers
 	public class OrderController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		[BindProperty]
+		public OrderVM OrderVM { get; set; }
 
 		public OrderController(IUnitOfWork unitOfWork)
 		{
@@ -26,19 +29,67 @@ namespace E_commerce_App.Areas.Admin.Controllers
 
 		public IActionResult Details(int orderId)
 		{
-			OrderVM orderVM = new()
+            OrderVM = new()
 			{
 				OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
 				OrderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeader.Id == orderId, includeProperties: "Product")
 			};
-			return View(orderVM);
+			return View(OrderVM);
 		}
 
-		#region API CALLS
-		[HttpGet]
+		[HttpPost]
+		[Authorize(Roles =SD.Role_Admin+","+SD.Role_Employee)]
+		public IActionResult UpdateOrderDetail()
+		{
+			var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+			orderHeaderFromDb.Name = OrderVM.OrderHeader.Name;
+			orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
+			orderHeaderFromDb.StreetAddress	= OrderVM.OrderHeader.StreetAddress;
+			orderHeaderFromDb.City = OrderVM.OrderHeader.City;
+			orderHeaderFromDb.State = OrderVM.OrderHeader.State;
+			orderHeaderFromDb.PostalCode = OrderVM.OrderHeader.PostalCode;
+			if (!string.IsNullOrEmpty(OrderVM.OrderHeader.Carrier))
+			{
+				orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+			}
+            if (!string.IsNullOrEmpty(OrderVM.OrderHeader.TrackingNumber))
+            {
+                orderHeaderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+            }
+			_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
+			_unitOfWork.Save();
+			TempData["Success"] = "Order Dedails Updated Successfully";
+            return RedirectToAction(nameof(Details), new {orderId = orderHeaderFromDb.Id});
+		}
+
+		[HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult StartProcessing()
+		{
+			_unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
+			_unitOfWork.Save();
+            TempData["Success"] = "Order Dedails Updated Successfully";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+        }
+
+        #region API CALLS
+        [HttpGet]
 		public IActionResult GetAll(string status)
 		{
-			List<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+			IEnumerable<OrderHeader> orderHeaders;
+			if(User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+			{
+                orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+			}
+			else
+			{
+				var claimIdentity = (ClaimsIdentity)User.Identity;
+				var userId = claimIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                orderHeaders = _unitOfWork.OrderHeader
+					.GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser").ToList();
+            }
+
 
 			switch (status)
 			{
