@@ -26,7 +26,7 @@ namespace E_commerce_App.Areas.Customer.Controllers
             var claimIndentity = (ClaimsIdentity)User.Identity;
             var claim = claimIndentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            if(claim == null)
+            if(claim != null)
             {
                 HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
                 .GetAll(u => u.ApplicationUserId == claim.Value).Count());

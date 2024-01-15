@@ -1,5 +1,6 @@
 ﻿using EcommerceApp.Utility;
 using ECommerceApp.DataAccess.Repository;
+using ECommerceApp.DataAccess.Repository.IRepository;
 using ECommerceApp.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -8,9 +9,9 @@ namespace E_commerce_App.ViewComponents
 {
     public class ShoppingCartViewComponent : ViewComponent
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ShoppingCartViewComponent(UnitOfWork unitOfWork)
+        public ShoppingCartViewComponent(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
