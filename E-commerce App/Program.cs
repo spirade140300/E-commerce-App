@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using ECommerceApp.Utility;
 using Stripe;
+using ECommerceApp.DataAccess.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,8 @@ builder.Services.AddAuthentication().AddFacebook(options =>
     options.AppSecret = "40b4185da3a0c25318c345f1202f124d";
 });
 
+builder.Services.AddScoped<IDbInitializer, IDbInitializer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +59,7 @@ app.UseStaticFiles();
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseRouting();
 app.UseSession();
+seedDatabase();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
@@ -65,3 +69,12 @@ app.MapControllerRoute(
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void seedDatabase()
+{
+    using(var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
